@@ -1,0 +1,19 @@
+{
+  "name": "@nutrition/core",
+  "version": "0.1.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "build": {
+    "esbuild": {
+      "entry": "./src/**/*.ts",
+      "outdir": "./dist",
+      "format": "cjs"
+    }
+  },
+  "scripts": {
+    "build": "../../build.js core"
+  },
+  "devDependencies": {
+    "typescript": "^4.2.4"
+  }
+}
