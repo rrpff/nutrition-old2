@@ -29,7 +29,7 @@ const UsdaFoodPage = ({ food }: IUsdaFoodPageProps) => {
 
       <select onChange={e => setSelectedVariant(food.variants.find(v => v.sourceId === e.target.value)!)}>
         {food.variants.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0).map(variant => (
-          <option key={variant.sourceId} value={variant.sourceId}>
+          <option key={variant.sourceId} value={variant.sourceId} selected={variant.sourceId === selectedVariant.sourceId}>
             {[variant.name, ...variant.modifiers].join(', ')}
           </option>
         ))}
