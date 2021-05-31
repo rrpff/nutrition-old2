@@ -9,7 +9,7 @@
     "build-json": "ts-node ./src/build.ts"
   },
   "dependencies": {
-    "@nutrition/core": "file:../core"
+    "@nutrition/core": "0.1.0"
   },
   "devDependencies": {
     "@types/capitalize": "^2.0.0",
