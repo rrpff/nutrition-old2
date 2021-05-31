@@ -1,6 +1,6 @@
 {
   "name": "@nutrition/web",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,8 +8,8 @@
     "start": "next start"
   },
   "dependencies": {
-    "@nutrition/core": "0.1.0",
-    "@nutrition/usda": "0.1.0",
+    "@nutrition/core": "^0.1.1",
+    "@nutrition/usda": "^0.1.1",
     "next": "10.2.3",
     "react": "17.0.2",
     "react-dom": "17.0.2"

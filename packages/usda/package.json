@@ -1,6 +1,6 @@
 {
   "name": "@nutrition/usda",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -9,7 +9,7 @@
     "build-json": "ts-node ./src/build.ts"
   },
   "dependencies": {
-    "@nutrition/core": "0.1.0"
+    "@nutrition/core": "^0.1.1"
   },
   "devDependencies": {
     "@types/capitalize": "^2.0.0",
