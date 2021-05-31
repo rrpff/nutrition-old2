@@ -12,7 +12,8 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "strict": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "resolveJsonModule": true
   },
   "include": [
     "src/**/*"
