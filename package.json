@@ -1,6 +1,10 @@
 {
   "name": "root",
   "private": true,
+  "scripts": {
+    "dev-builds": "./build.js --watch",
+    "dev-web": "lerna exec --scope @nutrition/web npm run dev"
+  },
   "devDependencies": {
     "estrella": "^1.4.1",
     "fs-extra": "^10.0.0",
