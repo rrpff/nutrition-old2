@@ -1,12 +1,13 @@
 import { GetStaticPaths, GetStaticProps } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
-import { foods, IUsdaFood } from '@nutrition/usda'
+import { foods, IUsdaFood, IUsdaFoodVariant } from '@nutrition/usda'
 import { useState } from 'react'
 import { INutrientKey } from '@nutrition/core'
 
 // TODO: move into @nutrition/usda
 const foodToSlug = (food: IUsdaFood) => food.name.toLowerCase().replace(/\s/g, '-').replace(/[^0-9|a-z|-]/g, '')
+const variantDescription = (variant: IUsdaFoodVariant) => [variant.name, ...variant.modifiers].join(', ')
 
 interface IUsdaFoodPageProps {
   food: IUsdaFood
@@ -15,7 +16,7 @@ interface IUsdaFoodPageProps {
 const UsdaFoodPage = ({ food }: IUsdaFoodPageProps) => {
   // TODO: set default in @nutrition/usda
   const [selectedVariant, setSelectedVariant] = useState(
-    food.variants.find(v => [v.name, ...v.modifiers].join(', ').trim() === food.name.trim()) || food.variants[0]
+    food.variants.find(v => variantDescription(v) === food.name) || food.variants[0]
   )
 
   return (
@@ -28,14 +29,21 @@ const UsdaFoodPage = ({ food }: IUsdaFoodPageProps) => {
       <h1>{food.name}</h1>
 
       <select onChange={e => setSelectedVariant(food.variants.find(v => v.sourceId === e.target.value)!)}>
-        {food.variants.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0).map(variant => (
-          <option key={variant.sourceId} value={variant.sourceId} selected={variant.sourceId === selectedVariant.sourceId}>
-            {[variant.name, ...variant.modifiers].join(', ')}
-          </option>
-        ))}
+        {food.variants
+          .sort((a, b) =>
+            variantDescription(a) < variantDescription(b) ? -1 :
+            variantDescription(a) > variantDescription(b) ? 1 :
+            0
+          )
+          .map(variant => (
+            <option key={variant.sourceId} value={variant.sourceId} selected={variant.sourceId === selectedVariant.sourceId}>
+              {variantDescription(variant)}
+            </option>
+          ))
+        }
       </select>
 
-      <h2>{[selectedVariant.name, ...selectedVariant.modifiers].join(', ')}</h2>
+      <h2>{variantDescription(selectedVariant)}</h2>
       <p>Original USDA name: {selectedVariant.originalUsdaDescription}</p>
 
       <table>
