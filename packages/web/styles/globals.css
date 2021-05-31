@@ -14,6 +14,10 @@ a:hover {
   color: var(--n-primary-700);
 }
 
+a:visited {
+  color: var(--n-primary-800);
+}
+
 * {
   box-sizing: border-box;
 }
