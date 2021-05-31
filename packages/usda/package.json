@@ -1,15 +1,21 @@
 {
   "name": "@nutrition/usda",
   "version": "0.1.0",
+  "main": "./dist/index.json",
+  "scripts": {
+    "build": "ts-node ./src/build.ts"
+  },
   "dependencies": {
     "@nutrition/core": "file:../core"
   },
   "devDependencies": {
     "@types/capitalize": "^2.0.0",
+    "@types/mkdirp": "^1.0.1",
     "@types/pluralize": "^0.0.29",
     "capitalize": "^2.0.3",
     "chalk": "^4.1.1",
     "csv-parse": "^4.15.4",
+    "mkdirp": "^1.0.4",
     "pluralize": "^8.0.0",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.2"

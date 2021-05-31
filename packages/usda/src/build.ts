@@ -1,14 +1,16 @@
+import fs from 'fs/promises'
 import path from 'path'
+import mkdirp from 'mkdirp'
 import { singular } from 'pluralize'
 import capitalize from 'capitalize'
-import { green, yellow, grey } from 'chalk'
 import { readCSV, sum } from './lib/utils'
 import { IUsdaFoodNutrients, IUsdaFoodCsv, IUsdaFoodCategory, IUsdaFoodVariant, INutrientProfile, IUsdaFood, IUsdaToCoreNutrientMapping } from './types'
-import { INutrientKey } from '@nutrition/core'
 
 const DATA_DIRECTORY_PATH = path.join(__dirname, '..', 'data')
 const SR_LEGACY_DIRECTORY_PATH = path.join(DATA_DIRECTORY_PATH, 'FoodData_Central_sr_legacy_food_csv_ 2019-04-02')
 const SUPPORTING_DIRECTORY_PATH = path.join(DATA_DIRECTORY_PATH, 'FoodData_Central_Supporting_Data_csv_2021-04-28')
+const OUTPUT_DIR = path.join(__dirname, '..', 'dist')
+const OUTPUT_JSON_PATH = path.join(OUTPUT_DIR, 'index.json')
 
 const foodDataPath = path.join(SR_LEGACY_DIRECTORY_PATH, 'food.csv')
 const foodCategoryPath = path.join(SUPPORTING_DIRECTORY_PATH, 'food_category.csv')
@@ -290,8 +292,7 @@ const withNutrients = (
 
   const foods = await getFoodVariants(usdaFoods, usdaCategories)
 
-  foods
-    .filter(food => queryRegexp.test(food.originalUsdaDescription))
+  const objects = foods
     .filter(withoutBrandedFoods)
     .filter(withoutUnwantedFoods)
     .map(withoutIgnoredModifiers)
@@ -301,17 +302,9 @@ const withNutrients = (
     .map(food => withNutrients(food, foodNutrients, mappings))
     .reduce(groupVariantsIntoFoods, [] as IUsdaFood[])
     .sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
-    .map(food => {
-      console.log(green(food.name) + ' ' + yellow(food.variants.length))
-      food.variants.map(variant => {
-        console.log(grey(`+ ${[variant.name, ...variant.modifiers].join(', ')}`))
-        console.log(grey(`  (originally "${variant.originalUsdaDescription}")`))
 
-        Object.keys(variant.nutrients).forEach(nutrient => {
-          console.log(grey(`>   ${nutrient} ${variant.nutrients[nutrient as INutrientKey].amount} ${variant.nutrients[nutrient as INutrientKey].unit}`))
-        })
-      })
-    })
+  await mkdirp(OUTPUT_DIR)
+  await fs.writeFile(OUTPUT_JSON_PATH, JSON.stringify(objects, null, 2))
 })()
 
 function applyUntilStatic<T>(base: T, mapper: (elem: T) => T, iteratee: (a: T) => any): T {
