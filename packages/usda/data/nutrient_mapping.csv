@@ -1,0 +1,89 @@
+usda_ids,name,nutrient_key,unit_key
+1002,Nitrogen,nitrogen,grams
+1003,Protein,protein,grams
+1004,Fat,fat,grams
+1007,Ash,ash,grams
+1008,Energy,energy,kcal
+1009,Starch,starch,grams
+1010,Sucrose,sucrose,grams
+1011,Glucose,glucose,grams
+1012,Fructose,fructose,grams
+1013,Lactose,lactose,grams
+1014,Maltose,maltose,grams
+1018,Alcohol,alcohol,grams
+1051,Water,water,grams
+1057,Caffeine,caffeine,milligrams
+1058,Theobromine,theobromine,milligrams
+1062,Energy,energy,kJ
+1075,Galactose,galactose,grams
+1079,Fiber,fiber,grams
+1087,Calcium,calcium,milligrams
+1089,Iron,iron,milligrams
+1090,Magnesium,magnesium,milligrams
+1091,Phosphorus,phosphorus,milligrams
+1092,Potassium,potassium,milligrams
+1093,Sodium,sodium,milligrams
+1095,Zinc,zinc,milligrams
+1098,Copper,copper,milligrams
+1101,Manganese,manganese,milligrams
+1103,Selenium,selenium,micrograms
+1105,Retinol,retinol,micrograms
+1106,Vitamin A,vitamin_a,micrograms
+1107,"Carotene, beta",carotene_beta,micrograms
+1108,"Carotene, alpha",carotene_alpha,micrograms
+1109,Vitamin E,vitamin_e,milligrams
+1114,Vitamin D,vitamin_d,micrograms
+1120,"Cryptoxanthin, beta",cryptoxanthin_beta,micrograms
+1122,Lycopene,lycopene,micrograms
+1123,Lutein + zeaxanthin,lutein_zeaxanthin,micrograms
+1125,"Tocopherol, beta",tocopherol_beta,milligrams
+1126,"Tocopherol, gamma",tocopherol_gamma,milligrams
+1127,"Tocopherol, delta",tocopherol_delta,milligrams
+1128,"Tocotrienol, alpha",tocotrienol_alpha,milligrams
+1129,"Tocotrienol, beta",tocotrienol_beta,milligrams
+1130,"Tocotrienol, gamma",tocotrienol_gamma,milligrams
+1131,"Tocotrienol, delta",tocotrienol_delta,milligrams
+1162,Vitamin C,vitamin_c,milligrams
+1165,Thiamin,thiamin,milligrams
+1166,Riboflavin,riboflavin,milligrams
+1167,Niacin,niacin,milligrams
+1170,Pantothenic acid,pantothenic_acid,milligrams
+1175,Vitamin B6,vitamin_b6,milligrams
+1177,Folate,folate,micrograms
+1178,Vitamin B12,vitamin_b12,micrograms
+1180,Choline,choline,milligrams
+1183+1184+1185,Vitamin K,vitamin_k,micrograms
+1186,Folic acid,folic_acid,micrograms
+1198,Betaine,betaine,milligrams
+1210,Tryptophan,tryptophan,grams
+1211,Threonine,threonine,grams
+1212,Isoleucine,isoleucine,grams
+1213,Leucine,leucine,grams
+1214,Lysine,lysine,grams
+1215,Methionine,methionine,grams
+1216,Cystine,cystine,grams
+1217,Phenylalanine,phenylalanine,grams
+1218,Tyrosine,tyrosine,grams
+1219,Valine,valine,grams
+1220,Arginine,arginine,grams
+1221,Histidine,histidine,grams
+1222,Alanine,alanine,grams
+1223,Aspartic acid,aspartic_acid,grams
+1224,Glutamic acid,glutamic_acid,grams
+1225,Glycine,glycine,grams
+1226,Proline,proline,grams
+1227,Serine,serine,grams
+1228,Hydroxyproline,hydroxyproline,grams
+1253,Cholesterol,cholesterol,milligrams
+1257,"Fatty acids, trans",fatty_acids_trans,grams
+1258,"Fatty acids, saturated",fatty_acids_saturated,grams
+1283,Phytosterols,phytosterols,milligrams
+1285,Stigmasterol,stigmasterol,milligrams
+1286,Campesterol,campesterol,milligrams
+1288,Beta-sitosterol,beta_sitosterol,milligrams
+1292,"Fatty acids, monounsaturated",fatty_acids_monounsaturated,grams
+1293,"Fatty acids, polyunsaturated",fatty_acids_polyunsaturated,grams
+1329,"Fatty acids, trans-monoenoic",fatty_acids_trans_monoenoic,grams
+1330,"Fatty acids, trans-dienoic",fatty_acids_trans_dienoic,grams
+1331,"Fatty acids, trans-polyenoic",fatty_acids_trans_polyenoic,grams
+2000,Sugars,sugars,grams

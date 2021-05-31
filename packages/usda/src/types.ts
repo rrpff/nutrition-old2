@@ -40,7 +40,12 @@ export type INutrientProfile = {
   }
 }
 
-export interface IUsdaFoodRecord {
+export interface IUsdaFood {
+  name: string
+  variants: IUsdaFoodVariant[]
+}
+
+export interface IUsdaFoodVariant {
   sourceId: string
   name: string
   originalUsdaDescription: string

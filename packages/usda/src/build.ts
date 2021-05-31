@@ -2,43 +2,39 @@ import path from 'path'
 import { singular } from 'pluralize'
 import capitalize from 'capitalize'
 import { green, yellow, grey } from 'chalk'
-import { parseDescription, readCSV } from './lib/utils'
-import { IUsdaNutrients, IUsdaFoodNutrients, IUsdaFoodCsv, IUsdaFoodCategory, IUsdaFoodRecord, INutrientProfile } from './types'
+import { readCSV, sum } from './lib/utils'
+import { IUsdaFoodNutrients, IUsdaFoodCsv, IUsdaFoodCategory, IUsdaFoodVariant, INutrientProfile, IUsdaFood, IUsdaToCoreNutrientMapping } from './types'
+import { INutrientKey } from '@nutrition/core'
 
-const SR_LEGACY_DIRECTORY_PATH = path.join(__dirname, '..', 'data', 'FoodData_Central_sr_legacy_food_csv_ 2019-04-02')
-const SUPPORTING_DIRECTORY_PATH = path.join(__dirname, '..', 'data', 'FoodData_Central_Supporting_Data_csv_2021-04-28')
+const DATA_DIRECTORY_PATH = path.join(__dirname, '..', 'data')
+const SR_LEGACY_DIRECTORY_PATH = path.join(DATA_DIRECTORY_PATH, 'FoodData_Central_sr_legacy_food_csv_ 2019-04-02')
+const SUPPORTING_DIRECTORY_PATH = path.join(DATA_DIRECTORY_PATH, 'FoodData_Central_Supporting_Data_csv_2021-04-28')
 
 const foodDataPath = path.join(SR_LEGACY_DIRECTORY_PATH, 'food.csv')
 const foodCategoryPath = path.join(SUPPORTING_DIRECTORY_PATH, 'food_category.csv')
 const foodNutrientPath = path.join(SR_LEGACY_DIRECTORY_PATH, 'food_nutrient.csv')
-const nutrientPath = path.join(SUPPORTING_DIRECTORY_PATH, 'nutrient.csv')
+const nutrientMappingPath = path.join(DATA_DIRECTORY_PATH, 'nutrient_mapping.csv')
 
 const queryRegexp = new RegExp(process.argv[2] || '.*', 'g')
 
-const getNutrients = (fdcId: string, nutrients: IUsdaNutrients[], foodNutrients: IUsdaFoodNutrients[]): INutrientProfile => {
-  return foodNutrients
-    .filter(n => n.fdc_id === fdcId)
-    .reduce((acc, n) => {
-      const usdaNutrient = nutrients.find(u => u.id === n.nutrient_id)
-      return {
-        ...acc,
-        [usdaNutrient!.id]: {
-          amount: n.amount,
-          unit: usdaNutrient!.unit_name,
-        }
-      }
-    }, {} as any)
+const NOTES_REGEXP = /\(([^\)]*)\)/g
+
+const parseDescription = (description: string) => {
+  const [name, ...modifiers] = description.replace(NOTES_REGEXP, '').split(/[,|;]\s*/g)
+  const notes = description.match(NOTES_REGEXP) || []
+
+  return {
+    name: name.trim().replace(/\s{2,}/g, ''),
+    notes: Array.from(notes).map(note => note.slice(1, note.length - 1)),
+    modifiers: modifiers
+      .map(modifier => modifier.trim().replace(/\s{2,}/g, ' '))
+      .filter(modifier => modifier.length > 0),
+  }
 }
 
-const parseFoods = async (): Promise<IUsdaFoodRecord[]> => {
-  const foods = await readCSV<IUsdaFoodCsv>(foodDataPath)
-  const categories = await readCSV<IUsdaFoodCategory>(foodCategoryPath)
-  // const foodNutrients = await readCSV<IUsdaFoodNutrients>(foodNutrientPath)
-  // const usdaNutrients = await readCSV<IUsdaNutrients>(nutrientPath)
-
+const getFoodVariants = async (foods: IUsdaFoodCsv[], categories: IUsdaFoodCategory[]): Promise<IUsdaFoodVariant[]> => {
   return foods.map(food => {
     const { name, notes, modifiers } = parseDescription(food.description)
-    // const nutrients = getNutrients(food.fdc_id, usdaNutrients, foodNutrients)
     const nutrients = {} as any
     const category = {
       name: categories.find(c => c.id === food.food_category_id)!.description
@@ -87,12 +83,12 @@ const IGNORED_MODIFIERS = [
   'with calcium propionate',
   'with ca prop',
 ]
-const withoutIgnoredModifiers = (food: IUsdaFoodRecord): IUsdaFoodRecord => ({
+const withoutIgnoredModifiers = (food: IUsdaFoodVariant): IUsdaFoodVariant => ({
   ...food,
   modifiers: food.modifiers.filter(mod => !IGNORED_MODIFIERS.includes(mod)),
 })
 
-const withoutBrandedFoods = (food: IUsdaFoodRecord) => {
+const withoutBrandedFoods = (food: IUsdaFoodVariant) => {
   return ![
     /[A-Z]{2,}/g, // Only branded foods seem to be capitalised like this
     /^Restaurant,/,
@@ -109,6 +105,13 @@ const withoutBrandedFoods = (food: IUsdaFoodRecord) => {
     /Rudi's/,
     /Udi's/,
     /Van's/,
+    /Nabisco/,
+    /Mission Foods/,
+    /Martha White Foods/,
+    /Kraft/,
+    /Mary's Gone Crackers/,
+    /Clif Z/,
+    /Andrea's/,
   ].some(regexp => {
     return regexp.test(food.originalUsdaDescription)
   })
@@ -121,6 +124,12 @@ const UNWANTED_FOODS = [
   'Snacks, corn-based, extruded, chips, plain',
   'Snacks, corn-based, extruded, cones, plain',
 
+  // Highly specific, not useful
+  'School Lunch, pizza, cheese topping, thick crust, whole grain, frozen, cooked',
+  'School Lunch, pizza, pepperoni topping, thick crust, whole grain, frozen, cooked',
+  'School Lunch, pizza, cheese topping, thin crust, whole grain, frozen, cooked',
+  'School Lunch, chicken patty, whole grain breaded',
+
   // Just weird honestly
   'Beverages, carbonated, low calorie, cola or pepper-type, with aspartame, contains caffeine',
   'Beverages, carbonated, low calorie, cola or pepper-type, with aspartame, without caffeine',
@@ -129,15 +138,24 @@ const UNWANTED_FOODS = [
   'Beverages, carbonated, low calorie, other than cola or pepper, with aspartame, contains caffeine',
   'Beverages, carbonated, pepper-type, contains caffeine',
   'Carbonated beverage, low calorie, other than cola or pepper, with sodium saccharin, without caffeine',
+
+  // Should probably be more specific than this eh
+  'Nutritional supplement for people with diabetes, liquid',
 ]
-const withoutUnwantedFoods = (food: IUsdaFoodRecord) => {
+const withoutUnwantedFoods = (food: IUsdaFoodVariant) => {
   return !UNWANTED_FOODS.includes(food.originalUsdaDescription)
 }
 
-const withSpecificFixes = (food: IUsdaFoodRecord) => {
+const withSpecificFixes = (food: IUsdaFoodVariant) => {
   switch (food.originalUsdaDescription) {
     case 'Alcoholic beverage, rice (sake)':
       return { ...food, name: 'Sake', modifiers: [], notes: [] }
+
+    case 'Alcoholic beverage, distilled, all (gin, rum, vodka, whiskey) 80 proof':
+      return { ...food, name: 'Distilled alcohol', modifiers: ['80 proof'], notes: [] }
+
+    case 'Alcoholic beverage, distilled, all (gin, rum, vodka, whiskey) 86 proof':
+      return { ...food, name: 'Distilled alcohol', modifiers: ['86 proof'], notes: [] }
 
     case 'Alcoholic beverage, distilled, all (gin, rum, vodka, whiskey) 94 proof':
       return { ...food, name: 'Distilled alcohol', modifiers: ['94 proof'], notes: [] }
@@ -148,13 +166,16 @@ const withSpecificFixes = (food: IUsdaFoodRecord) => {
     case 'Beverages, carbonated, orange':
       return { ...food, name: 'Orange drink', modifiers: ['carbonated'], notes: [] }
 
+    case 'Beverages, Energy Drink with carbonated water and high fructose corn syrup':
+      return { ...food, name: 'Energy drink', modifiers: [], notes: [] }
+
     default:
       return food
   }
 }
 
-const withRemovedPrefixes = (food: IUsdaFoodRecord) => {
-  const fix = (updated: IUsdaFoodRecord) => {
+const withRemovedPrefixes = (food: IUsdaFoodVariant) => {
+  const fix = (updated: IUsdaFoodVariant) => {
     const isPrefixed = [
       /^Alcoholic [b|B]everages?/,
       /^Beverages?/,
@@ -189,8 +210,8 @@ const withRemovedPrefixes = (food: IUsdaFoodRecord) => {
   return applyUntilStatic(food, fix, food => food.name)
 }
 
-const withAppendedPrefixes = (food: IUsdaFoodRecord) => {
-  const fix = (updated: IUsdaFoodRecord) => {
+const withAppendedPrefixes = (food: IUsdaFoodVariant) => {
+  const fix = (updated: IUsdaFoodVariant) => {
     const isPrefixed = [
       /^Beans$/,
     ].some(regexp => {
@@ -211,8 +232,63 @@ const withAppendedPrefixes = (food: IUsdaFoodRecord) => {
   return applyUntilStatic(food, fix, food => food.name)
 }
 
+const groupVariantsIntoFoods = (foods: IUsdaFood[], variant: IUsdaFoodVariant) => {
+  const existingFoodIndex = foods.findIndex(food => food.name === variant.name)
+  const exists = existingFoodIndex > -1
+
+  if (!exists) return [...foods, { name: variant.name, variants: [variant] }]
+
+  const existingFood = foods[existingFoodIndex]
+  return [
+    ...foods.filter((_, index) => index !== existingFoodIndex),
+    {
+      name: variant.name,
+      variants: [
+        ...existingFood.variants,
+        variant
+      ]
+    }
+  ]
+}
+
+const getNutrientsForFoodVariantId = (fdcId: string, usdaNutrientsForFood: IUsdaFoodNutrients[], mappings: IUsdaToCoreNutrientMapping[]): INutrientProfile => {
+  const variantNutrients = usdaNutrientsForFood.filter(n => n.fdc_id === fdcId)
+
+  return mappings.reduce((profile, mapping) => {
+    const usdaIds = mapping.usda_ids.split('+')
+    const amount = sum(usdaIds.map(usdaId => {
+      const found = variantNutrients.find(n => n.nutrient_id === usdaId)?.amount
+      return found ? Number(found) : 0
+    }))
+
+    return {
+      ...profile,
+      [mapping.nutrient_key]: {
+        amount: amount,
+        unit: mapping.unit_key,
+      }
+    }
+  }, {} as INutrientProfile)
+}
+
+const withNutrients = (
+  food: IUsdaFoodVariant,
+  usdaFoodNutrients: IUsdaFoodNutrients[],
+  mappings: IUsdaToCoreNutrientMapping[],
+): IUsdaFoodVariant => {
+  return {
+    ...food,
+    nutrients: getNutrientsForFoodVariantId(food.sourceId, usdaFoodNutrients, mappings),
+  }
+}
+
 ;(async () => {
-  const foods = await parseFoods()
+  const usdaFoods = await readCSV<IUsdaFoodCsv>(foodDataPath)
+  const usdaCategories = await readCSV<IUsdaFoodCategory>(foodCategoryPath)
+  const foodNutrients = await readCSV<IUsdaFoodNutrients>(foodNutrientPath)
+  const mappings = await readCSV<IUsdaToCoreNutrientMapping>(nutrientMappingPath)
+
+  const foods = await getFoodVariants(usdaFoods, usdaCategories)
 
   foods
     .filter(food => queryRegexp.test(food.originalUsdaDescription))
@@ -222,12 +298,18 @@ const withAppendedPrefixes = (food: IUsdaFoodRecord) => {
     .map(withSpecificFixes)
     .map(withRemovedPrefixes)
     .map(withAppendedPrefixes)
+    .map(food => withNutrients(food, foodNutrients, mappings))
+    .reduce(groupVariantsIntoFoods, [] as IUsdaFood[])
+    .sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
     .map(food => {
-      console.log(yellow([green(food.name), ...food.modifiers].join(', ')))
-      console.log(grey(`> USDA: ${food.originalUsdaDescription}`))
+      console.log(green(food.name) + ' ' + yellow(food.variants.length))
+      food.variants.map(variant => {
+        console.log(grey(`+ ${[variant.name, ...variant.modifiers].join(', ')}`))
+        console.log(grey(`  (originally "${variant.originalUsdaDescription}")`))
 
-      Object.keys(food.nutrients).forEach(nutrient => {
-        console.log(grey(`> ${nutrient} ${(food.nutrients as any)[nutrient].amount} ${(food.nutrients as any)[nutrient].unit}`))
+        Object.keys(variant.nutrients).forEach(nutrient => {
+          console.log(grey(`>   ${nutrient} ${variant.nutrients[nutrient as INutrientKey].amount} ${variant.nutrients[nutrient as INutrientKey].unit}`))
+        })
       })
     })
 })()

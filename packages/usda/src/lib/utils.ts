@@ -11,17 +11,15 @@ export const readCSV = async <T>(path: string): Promise<T[]> => {
   return records
 }
 
-const NOTES_REGEXP = /\(([^\)]*)\)/g
-
-export const parseDescription = (description: string) => {
-  const [name, ...modifiers] = description.replace(NOTES_REGEXP, '').split(/[,|;]\s*/g)
-  const notes = description.match(NOTES_REGEXP) || []
-
-  return {
-    name: name.trim().replace(/\s{2,}/g, ''),
-    notes: Array.from(notes).map(note => note.slice(1, note.length - 1)),
-    modifiers: modifiers
-      .map(modifier => modifier.trim().replace(/\s{2,}/g, ' '))
-      .filter(modifier => modifier.length > 0),
-  }
+export const uniq = <T>(acc: T[], elem: T): T[] => {
+  if (acc.includes(elem)) return acc
+  return [...acc, elem]
 }
+
+export const flatten = <T>(arr: T[][]): T[] => {
+  return arr.reduce((acc, subarr) => {
+    return [...acc, ...subarr]
+  }, [])
+}
+
+export const sum = (arr: number[]): number => arr.reduce((total, n) => total + n, 0)
