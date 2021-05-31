@@ -7,8 +7,11 @@ body {
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+  color: var(--n-primary-500);
+}
+
+a:hover {
+  color: var(--n-primary-700);
 }
 
 * {

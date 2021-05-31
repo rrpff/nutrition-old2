@@ -2,6 +2,7 @@ import { GetStaticProps } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import { foods, IUsdaFood } from '@nutrition/usda'
+import { Layout } from '@/containers/Layout'
 
 // TODO: move into @nutrition/usda
 const foodToSlug = (food: IUsdaFood) => food.name.toLowerCase().replace(/\s/g, '-').replace(/[^0-9|a-z|-]/g, '')
@@ -15,21 +16,21 @@ interface IUsdaFoodsIndexProps {
 
 const UsdaFoodsIndex = ({ foods }: IUsdaFoodsIndexProps) => {
   return (
-    <div>
+    <Layout>
       <Head>
         <title>Nutrition</title>
       </Head>
 
       <h1>USDA Foods</h1>
 
-      <ul>
+      <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
         {foods.map(food => (
           <li key={food.path}>
             <Link href={food.path}><a>{food.name}</a></Link>
           </li>
         ))}
       </ul>
-    </div>
+    </Layout>
   )
 }
 

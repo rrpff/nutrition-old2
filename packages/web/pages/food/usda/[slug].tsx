@@ -1,9 +1,10 @@
 import { GetStaticPaths, GetStaticProps } from 'next'
+import { useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { foods, IUsdaFood, IUsdaFoodVariant } from '@nutrition/usda'
-import { useState } from 'react'
 import { INutrientKey } from '@nutrition/core'
+import { Layout } from '@/containers/Layout'
 
 // TODO: move into @nutrition/usda
 const foodToSlug = (food: IUsdaFood) => food.name.toLowerCase().replace(/\s/g, '-').replace(/[^0-9|a-z|-]/g, '')
@@ -20,7 +21,7 @@ const UsdaFoodPage = ({ food }: IUsdaFoodPageProps) => {
   )
 
   return (
-    <div>
+    <Layout>
       <Head>
         <title>Nutrition</title>
       </Head>
@@ -64,7 +65,7 @@ const UsdaFoodPage = ({ food }: IUsdaFoodPageProps) => {
           ))}
         </tbody>
       </table>
-    </div>
+    </Layout>
   )
 }
 
