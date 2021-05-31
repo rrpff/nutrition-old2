@@ -56,3 +56,15 @@ export interface IUsdaFoodVariant {
     name: string
   }
 }
+
+export interface IOutputFood {
+  name: string
+  variants: IOutputFoodVariant[]
+}
+
+export interface IOutputFoodVariant {
+  source: 'usda'
+  sourceId: string
+  name: string
+  nutrients: INutrientProfile
+}
