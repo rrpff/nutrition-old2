@@ -1,3 +1,4 @@
+import { desktop } from '@/styles/breakpoints'
 import styled from '@emotion/styled'
 
 export interface IButtonProps {
@@ -12,6 +13,12 @@ export const Button = styled.button<IButtonProps>`
 
   border-radius: 2px;
   font-size: 1rem;
+
+  width: 100%;
+
+  ${desktop} {
+    width: auto;
+  }
 
   cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
 
