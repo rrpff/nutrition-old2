@@ -1,4 +1,4 @@
-import { SingletonRouter as NextRouter } from 'next/router'
+import { SingletonRouter } from 'next/router'
 import { NextRoutingGateway } from './NextRoutingGateway'
 
 it.each([
@@ -22,9 +22,9 @@ it.each([
   expect(gateway.pathname).toEqual(newPath)
 })
 
-const createStubRouter = (pathname: string): NextRouter => {
+const createStubRouter = (pathname: string): SingletonRouter => {
   return {
     get pathname() { return pathname },
     push: (path: string) => { pathname = path }
-  } as NextRouter
+  } as SingletonRouter
 }

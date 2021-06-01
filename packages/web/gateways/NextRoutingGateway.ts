@@ -1,4 +1,4 @@
-import { SingletonRouter as NextRouter } from 'next/router'
+import { NextRouter } from 'next/router'
 import { IRoutingGateway } from '@/types'
 
 export class NextRoutingGateway implements IRoutingGateway {
