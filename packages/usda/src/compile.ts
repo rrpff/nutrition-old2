@@ -41,21 +41,13 @@ const run = async () => {
 
   const foods = groupVariantsIntoFoods(variants)
 
-  // const output: IJsonOutput = {
-  //   foods: []
-  // }
-
-  const output: IJsonOutput = require('../output/index.json')
+  const output: IJsonOutput = {
+    foods: []
+  }
 
   const onCancel = () => process.exit(1)
 
-  const startIndex = foods.findIndex(food => food.name === 'Soymilk')
-  // console.log(foods[startIndex + 1])
-  // console.log(startIndex)
-  // foods.slice(0, startIndex + 1).forEach(food => console.log(food.name))
-  // process.exit(0)
-
-  for (let food of foods.slice(startIndex)) {
+  for (let food of foods) {
     const keptVariants: IOutputFoodVariant[] = []
     const removedVariantIds: string[] = []
     let keepAll = false

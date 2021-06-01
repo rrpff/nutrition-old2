@@ -48,6 +48,14 @@ const IGNORED_MODIFIERS = [
   /^with ca prop$/,
 ]
 
+const PREFIXES_TO_APPEND = [
+  /^Beans$/,
+  /^Nuts$/,
+  /^Oil$/,
+  /^Spices$/,
+  /^Syrups$/,
+]
+
 const NOTES_REGEXP = /\(([^\)]*)\)/g
 export const parseDescription = (description: string) => {
   const [name, ...modifiers] = description.replace(NOTES_REGEXP, '').split(/[,|;]\s*/g)
@@ -114,9 +122,7 @@ export const removeIgnoredModifiers = (food: IUsdaFoodVariant): IUsdaFoodVariant
 
 export const appendUnwantedPrefixes = (food: IUsdaFoodVariant) => {
   const fix = (updated: IUsdaFoodVariant) => {
-    const isPrefixed = [
-      /^Beans$/,
-    ].some(regexp => {
+    const isPrefixed = [...PREFIXES_TO_APPEND].some(regexp => {
       return regexp.test(updated.name)
     })
 
@@ -126,7 +132,7 @@ export const appendUnwantedPrefixes = (food: IUsdaFoodVariant) => {
 
     return {
       ...updated,
-      name: capitalize([realName, food.name].join(' ')),
+      name: capitalize(realName),
       modifiers: [...realModifiers],
     }
   }
