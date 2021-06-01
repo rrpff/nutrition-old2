@@ -28,7 +28,7 @@ export const LoginForm = ({
       <form onSubmit={handleSubmit}>
         <Input
           type="email"
-          name="email"
+          name="username"
           id="email"
           placeholder="dana@example.com"
           data-testid="login-email-input"

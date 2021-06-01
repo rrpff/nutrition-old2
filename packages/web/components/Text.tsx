@@ -14,11 +14,11 @@ export const Paragraph = styled.p``
 
 export const Span = styled.span<ISpanProps>`
   color: ${props =>
-    props.mode === 'success' ? 'var(--n-success-700)' :
-    props.mode === 'info' ? 'var(--n-info-700)' :
-    props.mode === 'danger' ? 'var(--n-danger-600)' :
-    props.mode === 'error' ? 'var(--n-danger-600)' :
-    props.mode === 'warning' ? 'var(--n-warning-700)' :
+    props.mode === 'success' ? 'var(--n-success-800)' :
+    props.mode === 'info' ? 'var(--n-info-800)' :
+    props.mode === 'danger' ? 'var(--n-danger-800)' :
+    props.mode === 'error' ? 'var(--n-danger-800)' :
+    props.mode === 'warning' ? 'var(--n-warning-800)' :
     'var(--n-foreground)'
   }
 `

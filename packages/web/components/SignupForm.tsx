@@ -31,7 +31,7 @@ export const SignupForm = ({
       <form onSubmit={handleSubmit}>
         <Input
           type="email"
-          name="email"
+          name="username"
           placeholder="dana@example.com"
           data-testid="signup-email-input"
           onChange={e => setEmail(e.target.value)}

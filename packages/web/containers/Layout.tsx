@@ -1,9 +1,10 @@
-import Link from 'next/link'
-import { Fragment, ReactNode, useEffect, useState } from 'react'
-import { useDependency } from 'react-use-dependency'
 import styled from '@emotion/styled'
+import { MouseEvent, ReactNode, useEffect, useMemo, useState } from 'react'
+import { useDependency } from 'react-use-dependency'
 import { IAuthGateway } from '@/types'
 import { useAuth } from '@/hooks/useAuth'
+import { Navigation } from '@/components/Navigation'
+import { PageContainer } from '@/components/PageContainer'
 
 export interface ILayoutProps {
   children: ReactNode
@@ -12,56 +13,47 @@ export interface ILayoutProps {
 export const Layout = ({ children }: ILayoutProps) => {
   const authGateway = useDependency<IAuthGateway>('authGateway')
   const auth = useAuth(authGateway)
-  const [displayAuthLinks, setDisplayAuthLinks] = useState(false)
 
-  useEffect(() => {
-    setDisplayAuthLinks(true)
-  }, [])
+  const primaryLinks = [
+    { name: 'Nutrition', href: '/' },
+    { name: 'Foods', href: '/food/usda' },
+  ]
 
-  const loggedIn = auth.state.session?.user !== undefined
+  const secondaryLinks = useMemo(() => {
+    const loggedIn = auth.state.session?.user !== undefined
+
+    if (loggedIn) {
+      return [{
+        name: 'Sign out',
+        href: '#!',
+        'data-testid': 'sign-out-link',
+        onClick: (e: MouseEvent) => {
+          e.preventDefault()
+          auth.signOut()
+        }
+      }]
+    } else {
+      return [
+        { name: 'Log in', href: '/login', 'data-testid': 'login-link' },
+        { name: 'Sign up', href: '/signup', 'data-testid': 'signup-link' },
+      ]
+    }
+  }, [auth.state.session?.user])
 
   return (
-    <Container>
-      <nav>
-        {displayAuthLinks && (
-          <Fragment>
-            {loggedIn ? (
-              <a href="#!" data-testid="sign-out-link" onClick={e => {
-                e.preventDefault()
-                auth.signOut()
-              }}>
-                Sign out
-              </a>
-            ) : (
-              <Fragment>
-                <Link href="/login">
-                  <a data-testid="login-link">
-                    Log in
-                  </a>
-                </Link>
+    <PageContainer>
+      <Navigation
+        primaryLinks={primaryLinks}
+        secondaryLinks={secondaryLinks}
+      />
 
-                <Link href="/signup">
-                  <a data-testid="signup-link">
-                    Sign up
-                  </a>
-                </Link>
-              </Fragment>
-            )}
-          </Fragment>
-        )}
-      </nav>
-      {children}
-    </Container>
+      <PageMargin>
+        {children}
+      </PageMargin>
+    </PageContainer>
   )
 }
 
-const Container = styled.main`
-  display: block;
-  position: relative;
-  margin: auto;
-
-  width: 800px;
-  max-width: 100%;
-
-  padding: 30px;
+const PageMargin = styled.div`
+  margin-top: 70px;
 `
