@@ -1,4 +1,7 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, useMemo, useState } from 'react'
+import { Button } from './Button'
+import { Input } from './Input'
+import { Span } from './Text'
 
 export interface ISignupFormProps {
   onAttempt: (attempt: { email: string, password: string }) => void
@@ -13,6 +16,7 @@ export const SignupForm = ({
 }: ISignupFormProps) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const canSubmit = useMemo(() => email !== '' && password !== '', [email, password])
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -21,23 +25,29 @@ export const SignupForm = ({
 
   return (
     <div>
-      {message ? <span data-testid="signup-message">{message}</span> : null}
-      {error ? <span data-testid="signup-error">{error}</span> : null}
+      {message ? <Span mode="success" data-testid="signup-message">{message}</Span> : null}
+      {error ? <Span mode="error" data-testid="signup-error">{error}</Span> : null}
 
       <form onSubmit={handleSubmit}>
-        <input
+        <Input
           type="email"
           name="email"
+          placeholder="dana@example.com"
           data-testid="signup-email-input"
           onChange={e => setEmail(e.target.value)}
         />
-        <input
+
+        <Input
           type="password"
           name="password"
+          placeholder="••••••••••••••"
           data-testid="signup-password-input"
           onChange={e => setPassword(e.target.value)}
         />
-        <input type="submit" data-testid="signup-submit" />
+
+        <Button mode="primary" disabled={!canSubmit} data-testid="signup-submit">
+          Sign up
+        </Button>
       </form>
     </div>
   )

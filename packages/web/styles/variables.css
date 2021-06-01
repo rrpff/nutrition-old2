@@ -1,28 +1,31 @@
 :root {
-  /* https://www.happyhues.co/palettes/2 */
-  --n-background: #fffffe;
-  --n-foreground: #1b2d45;
-  --n-accent: #00214d;
-  --n-highlight: #00ebc7;
-  --n-secondary: #ff5470;
-  --n-tertiary: #fde24f;
+  --n-background: #FFFFFF;
+  --n-accent-100: #EEEEEE;
+  --n-accent-200: #CCCCCC;
+  --n-accent-300: #AAAAAA;
+  --n-accent-400: #999999;
+  --n-accent-500: #777777;
+  --n-accent-600: #555555;
+  --n-accent-700: #333333;
+  --n-accent-800: #111111;
+  --n-foreground: #000000;
 
   /* https://colors.eva.design/ */
-  --n-primary-100: #FFE4DC;
-  --n-primary-200: #FFC2BA;
-  --n-primary-300: #FF9A98;
-  --n-primary-400: #FF7E87;
-  --n-primary-500: #FF5470;
-  --n-primary-600: #DB3D66;
-  --n-primary-700: #B72A5B;
-  --n-primary-800: #931A50;
-  --n-primary-900: #7A1049;
-  --n-primary-transparent-100: rgba(255, 84, 112, 0.08);
-  --n-primary-transparent-200: rgba(255, 84, 112, 0.16);
-  --n-primary-transparent-300: rgba(255, 84, 112, 0.24);
-  --n-primary-transparent-400: rgba(255, 84, 112, 0.32);
-  --n-primary-transparent-500: rgba(255, 84, 112, 0.4);
-  --n-primary-transparent-600: rgba(255, 84, 112, 0.48);
+  --n-brand-100: #FFE4DC;
+  --n-brand-200: #FFC2BA;
+  --n-brand-300: #FF9A98;
+  --n-brand-400: #FF7E87;
+  --n-brand-500: #FF5470;
+  --n-brand-600: #DB3D66;
+  --n-brand-700: #B72A5B;
+  --n-brand-800: #931A50;
+  --n-brand-900: #7A1049;
+  --n-brand-transparent-100: rgba(255, 84, 112, 0.08);
+  --n-brand-transparent-200: rgba(255, 84, 112, 0.16);
+  --n-brand-transparent-300: rgba(255, 84, 112, 0.24);
+  --n-brand-transparent-400: rgba(255, 84, 112, 0.32);
+  --n-brand-transparent-500: rgba(255, 84, 112, 0.4);
+  --n-brand-transparent-600: rgba(255, 84, 112, 0.48);
   --n-success-100: #EBFDE4;
   --n-success-200: #D3FCCB;
   --n-success-300: #B4F7AE;
