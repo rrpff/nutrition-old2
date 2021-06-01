@@ -1,13 +1,13 @@
 {
   "name": "@nutrition/usda",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
   "scripts": {
     "build": "tsc --declaration --outDir dist"
   },
   "dependencies": {
-    "@nutrition/core": "^0.1.1"
+    "@nutrition/core": "^0.2.0"
   },
   "devDependencies": {
     "@types/capitalize": "^2.0.0",
