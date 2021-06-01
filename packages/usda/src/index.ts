@@ -1,6 +1,6 @@
 // @ts-ignore
-import FOODS from './index.json'
-import { IUsdaFood } from './types'
+import { foods as outputFoods } from '../output/index.json'
+import { IOutputFood } from './types'
 
 export * from './types'
-export const foods: IUsdaFood[] = FOODS
+export const foods = outputFoods as IOutputFood[]

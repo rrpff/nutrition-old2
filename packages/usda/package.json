@@ -1,12 +1,10 @@
 {
   "name": "@nutrition/usda",
   "version": "0.1.1",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
   "scripts": {
-    "build": "npm run build-ts && npm run build-json",
-    "build-ts": "tsc --declaration --outDir dist",
-    "build-json": "ts-node ./src/build.ts"
+    "build": "tsc --declaration --outDir dist"
   },
   "dependencies": {
     "@nutrition/core": "^0.1.1"

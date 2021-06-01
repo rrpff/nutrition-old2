@@ -2,22 +2,21 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import { useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import { foods, IUsdaFood, IUsdaFoodVariant } from '@nutrition/usda'
+import { foods, IOutputFood, IOutputFoodVariant } from '@nutrition/usda'
 import { INutrientKey } from '@nutrition/core'
 import { Layout } from '@/containers/Layout'
 
 // TODO: move into @nutrition/usda
-const foodToSlug = (food: IUsdaFood) => food.name.toLowerCase().replace(/\s/g, '-').replace(/[^0-9|a-z|-]/g, '')
-const variantDescription = (variant: IUsdaFoodVariant) => [variant.name, ...variant.modifiers].join(', ')
+const foodToSlug = (food: IOutputFood) => food.name.toLowerCase().replace(/\s/g, '-').replace(/[^0-9|a-z|-]/g, '')
 
-interface IUsdaFoodPageProps {
-  food: IUsdaFood
+interface IOutputFoodPageProps {
+  food: IOutputFood
 }
 
-const UsdaFoodPage = ({ food }: IUsdaFoodPageProps) => {
+const UsdaFoodPage = ({ food }: IOutputFoodPageProps) => {
   // TODO: set default in @nutrition/usda
   const [selectedVariant, setSelectedVariant] = useState(
-    food.variants.find(v => variantDescription(v) === food.name) || food.variants[0]
+    food.variants.find(v => v.name === food.name) || food.variants[0]
   )
 
   return (
@@ -32,20 +31,19 @@ const UsdaFoodPage = ({ food }: IUsdaFoodPageProps) => {
       <select onChange={e => setSelectedVariant(food.variants.find(v => v.sourceId === e.target.value)!)}>
         {food.variants
           .sort((a, b) =>
-            variantDescription(a) < variantDescription(b) ? -1 :
-            variantDescription(a) > variantDescription(b) ? 1 :
+            a.name < b.name ? -1 :
+            a.name > b.name ? 1 :
             0
           )
           .map(variant => (
             <option key={variant.sourceId} value={variant.sourceId} selected={variant.sourceId === selectedVariant.sourceId}>
-              {variantDescription(variant)}
+              {variant.name}
             </option>
           ))
         }
       </select>
 
-      <h2>{variantDescription(selectedVariant)}</h2>
-      <p>Original USDA name: {selectedVariant.originalUsdaDescription}</p>
+      <h2>{selectedVariant.name}</h2>
 
       <table>
         <thead>
@@ -79,7 +77,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
-export const getStaticProps: GetStaticProps<IUsdaFoodPageProps> = async ({ params }) => {
+export const getStaticProps: GetStaticProps<IOutputFoodPageProps> = async ({ params }) => {
   const food = foods.find(food => foodToSlug(food) === params!.slug)
 
   return {
