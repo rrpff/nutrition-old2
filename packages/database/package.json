@@ -1,0 +1,11 @@
+{
+  "name": "@nutrition/database",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "supabase start",
+    "stop": "supabase stop"
+  },
+  "devDependencies": {
+    "supabase": "^0.4.2"
+  }
+}
