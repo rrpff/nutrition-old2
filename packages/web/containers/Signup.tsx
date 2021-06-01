@@ -1,14 +1,13 @@
-import { FormEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDependency } from 'react-use-dependency'
-import { IAuthGateway, IRoutingGateway } from "@/types"
+import { IAuthGateway, IEmailPasswordRequest, IRoutingGateway } from "@/types"
 import { useAuth } from '@/hooks/useAuth'
+import { SignupForm } from '@/components/SignupForm'
 
 export const Signup = () => {
   const routingGateway = useDependency<IRoutingGateway>('routingGateway')
   const authGateway = useDependency<IAuthGateway>('authGateway')
   const auth = useAuth(authGateway)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -18,34 +17,17 @@ export const Signup = () => {
     }
   })
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    const result = await auth.signUpWithEmailAndPassword({ email, password })
+  const handleAttempt = async (attempt: IEmailPasswordRequest) => {
+    const result = await auth.signUpWithEmailAndPassword(attempt)
     setMessage(result.message)
     setError(result.error)
   }
 
   return (
-    <div>
-      {message ? <span data-testid="signup-message">{message}</span> : null}
-      {error ? <span data-testid="signup-error">{error}</span> : null}
-
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          data-testid="signup-email-input"
-          onChange={e => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          name="password"
-          data-testid="signup-password-input"
-          onChange={e => setPassword(e.target.value)}
-        />
-        <input type="submit" data-testid="signup-submit" />
-      </form>
-    </div>
+    <SignupForm
+      onAttempt={handleAttempt}
+      message={message}
+      error={error}
+    />
   )
 }
