@@ -5,11 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "jest"
   },
   "dependencies": {
     "@nutrition/core": "^0.2.0",
     "@nutrition/usda": "^0.2.0",
+    "@supabase/supabase-js": "^1.12.0",
     "next": "10.2.3",
     "react": "17.0.2",
     "react-dom": "17.0.2"
@@ -17,7 +19,19 @@
   "devDependencies": {
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/react-hooks": "^7.0.0",
+    "@types/jest": "^26.0.23",
     "@types/react": "17.0.8",
-    "typescript": "4.3.2"
+    "@types/uuid": "^8.3.0",
+    "alias-hq": "^5.1.6",
+    "dotenv": "^10.0.0",
+    "esbuild": "^0.12.5",
+    "esbuild-jest": "^0.5.0",
+    "jest": "^27.0.3",
+    "react-use-dependency": "^0.1.1",
+    "typescript": "4.3.2",
+    "uuid": "^8.3.2"
   }
 }
