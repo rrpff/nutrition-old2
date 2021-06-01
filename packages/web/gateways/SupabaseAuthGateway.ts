@@ -7,7 +7,6 @@ const MISSING_PASSWORD_RESULT = { success: false, message: null, error: 'Passwor
 export class SupabaseAuthGateway implements IAuthGateway {
   constructor(private client: SupabaseClient) {
     this.client.auth.onAuthStateChange(async (event, session) => {
-      console.log(session)
       await fetch('/api/supabase/auth', {
         method: 'POST',
         headers: new Headers({ 'Content-Type': 'application/json' }),
