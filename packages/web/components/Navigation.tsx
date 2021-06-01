@@ -177,7 +177,7 @@ const NavigationItem = styled.li`
 `
 
 const NavigationLink = styled.a<{ selected: boolean }>`
-  color: ${props => props.selected ? 'var(--n-primary)' : 'var(--n-foreground)'};
+  color: var(--n-foreground);
   font-weight: ${props => props.selected ? 'bold' : 'normal'};
 
   display: block;

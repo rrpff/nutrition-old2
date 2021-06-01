@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { MouseEvent, ReactNode, useEffect, useMemo, useState } from 'react'
 import { useDependency } from 'react-use-dependency'
-import { IAuthGateway } from '@/types'
+import { IAuthGateway, IRoutingGateway } from '@/types'
 import { useAuth } from '@/hooks/useAuth'
 import { Navigation } from '@/components/Navigation'
 import { PageContainer } from '@/components/PageContainer'
@@ -11,6 +11,7 @@ export interface ILayoutProps {
 }
 
 export const Layout = ({ children }: ILayoutProps) => {
+  const routingGateway = useDependency<IRoutingGateway>('routingGateway')
   const authGateway = useDependency<IAuthGateway>('authGateway')
   const auth = useAuth(authGateway)
 
@@ -45,6 +46,7 @@ export const Layout = ({ children }: ILayoutProps) => {
       <Navigation
         primaryLinks={primaryLinks}
         secondaryLinks={secondaryLinks}
+        selectedHref={routingGateway.pathname}
       />
 
       <PageMargin>
