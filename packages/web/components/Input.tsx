@@ -36,6 +36,10 @@ const StyledInput = styled.input`
   font-size: 1rem;
   width: 100%;
 
+  &::placeholder {
+    color: var(--n-accent-400);
+  }
+
   ${desktop} {
     width: auto;
     min-width: 60%;
