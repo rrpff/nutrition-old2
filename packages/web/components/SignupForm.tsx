@@ -32,6 +32,7 @@ export const SignupForm = ({
         <Input
           type="email"
           name="username"
+          label="Email address"
           placeholder="dana@example.com"
           data-testid="signup-email-input"
           onChange={e => setEmail(e.target.value)}
@@ -40,6 +41,7 @@ export const SignupForm = ({
         <Input
           type="password"
           name="password"
+          label="Password"
           placeholder="••••••••••••••"
           data-testid="signup-password-input"
           onChange={e => setPassword(e.target.value)}

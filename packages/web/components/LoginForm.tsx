@@ -30,6 +30,7 @@ export const LoginForm = ({
           type="email"
           name="username"
           id="email"
+          label="Email address"
           placeholder="dana@example.com"
           data-testid="login-email-input"
           onChange={e => setEmail(e.target.value)}
@@ -38,6 +39,7 @@ export const LoginForm = ({
         <Input
           type="password"
           name="password"
+          label="Password"
           placeholder="••••••••••••••"
           data-testid="login-password-input"
           onChange={e => setPassword(e.target.value)}
