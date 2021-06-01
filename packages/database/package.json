@@ -6,7 +6,8 @@
     "stop": "supabase stop"
   },
   "devDependencies": {
-    "mkdirp": "^1.0.4",
+    "knex": "^0.95.6",
+    "pg": "^8.6.0",
     "supabase": "^0.4.2"
   }
 }
