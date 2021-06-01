@@ -1,6 +1,6 @@
 {
   "name": "@nutrition/web",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,8 +9,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@nutrition/core": "^0.2.0",
-    "@nutrition/usda": "^0.2.0",
+    "@nutrition/core": "^0.2.1",
+    "@nutrition/usda": "^0.2.1",
     "@supabase/supabase-js": "^1.12.0",
     "next": "10.2.3",
     "react": "17.0.2",
