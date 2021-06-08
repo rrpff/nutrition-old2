@@ -4,10 +4,14 @@ import { IAuthGateway, IAuthResult, IAuthState, IEmailPasswordRequest } from '@/
 const MISSING_EMAIL_RESULT = { success: false, message: null, error: 'Email address is missing' }
 const MISSING_PASSWORD_RESULT = { success: false, message: null, error: 'Password is missing' }
 
+export const AUTH_STATE_API_URL = typeof window !== 'undefined'
+  ? new URL('/api/supabase/auth', window.location.origin).toString()
+  : null
+
 export class SupabaseAuthGateway implements IAuthGateway {
   constructor(private client: SupabaseClient) {
     this.client.auth.onAuthStateChange(async (event, session) => {
-      await fetch('/api/supabase/auth', {
+      await fetch(AUTH_STATE_API_URL!, {
         method: 'POST',
         headers: new Headers({ 'Content-Type': 'application/json' }),
         credentials: 'same-origin',
