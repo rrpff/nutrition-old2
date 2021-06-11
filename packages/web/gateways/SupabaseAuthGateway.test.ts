@@ -1,6 +1,7 @@
 import fetchMock from 'fetch-mock'
 import { AUTH_STATE_API_URL, SupabaseAuthGateway } from './SupabaseAuthGateway'
-import { supabaseTestClient, SUPABASE_TEST_USER_EMAIL, SUPABASE_TEST_USER_PASSWORD } from '../test/supabaseTestClient'
+import { supabaseTestClient } from '../test/supabaseTestClient'
+import { cleanSupabaseTestDatabase, confirmTestSupabaseUserEmail, createTestSupabaseUser } from '../test/supabaseTestDatabase'
 import { generateEmail, generatePassword } from '../test/generators'
 
 const REUSED_EMAIL_ADDRESS = generateEmail()
@@ -9,6 +10,7 @@ const subject = () => new SupabaseAuthGateway(supabaseTestClient)
 let authStateApiMock: any // FetchMockStatic
 beforeEach(() => authStateApiMock = fetchMock.post(AUTH_STATE_API_URL!, 200))
 afterEach(() => fetchMock.restore())
+afterEach(cleanSupabaseTestDatabase)
 
 describe('signUpWithEmailAndPassword', () => {
   it('returns an error when email is blank', async () => {
@@ -91,9 +93,9 @@ describe('signInWithEmailAndPassword', () => {
     })
   })
 
-  it('returns success when the email and password are correct', async () => {
-    const email = SUPABASE_TEST_USER_EMAIL
-    const password = SUPABASE_TEST_USER_PASSWORD
+  it('returns success when the email and password are correct and the account has been confirmed', async () => {
+    const { email, password } = await createTestSupabaseUser()
+    await confirmTestSupabaseUserEmail(email)
 
     const result = await subject().signInWithEmailAndPassword({ email, password })
 
@@ -107,8 +109,8 @@ describe('signInWithEmailAndPassword', () => {
 
 describe('state changes', () => {
   it('posts session data to the API upon successful sign in', async () => {
-    const email = SUPABASE_TEST_USER_EMAIL
-    const password = SUPABASE_TEST_USER_PASSWORD
+    const { email, password } = await createTestSupabaseUser()
+    await confirmTestSupabaseUserEmail(email)
 
     await subject().signInWithEmailAndPassword({ email, password })
 
@@ -122,8 +124,8 @@ describe('state changes', () => {
   })
 
   it('notifies the server on sign out', async () => {
-    const email = SUPABASE_TEST_USER_EMAIL
-    const password = SUPABASE_TEST_USER_PASSWORD
+    const { email, password } = await createTestSupabaseUser()
+    await confirmTestSupabaseUserEmail(email)
 
     await subject().signInWithEmailAndPassword({ email, password })
     await subject().signOut()
